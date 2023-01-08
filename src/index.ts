@@ -32,6 +32,13 @@ const main = async (): Promise<void> => {
   stream.autoReconnect = true
 
   stream.on(ETwitterStreamEvent.Data, async (tweet) => {
+    // Ignore RTs
+    if (
+      tweet.data.referenced_tweets?.some((tweet) => tweet.type === 'retweeted')
+    ) {
+      return
+    }
+
     const tweetLink = `https://twitter.com/anyuser/status/${tweet.data.id}`
     const tweetContent = tweet.data.text
 
