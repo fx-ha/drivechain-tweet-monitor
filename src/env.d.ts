@@ -7,6 +7,8 @@ declare global {
       PORT: string;
       GITHUB_PERSONAL_ACCESS_TOKEN: string;
       GITHUB_GIST_ID: string;
+      MESSAGE_THREAD_ID: string;
+      CHAT_ID: string;
     }
   }
 }

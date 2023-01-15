@@ -4,7 +4,9 @@ import { ETwitterStreamEvent, TwitterApi } from 'twitter-api-v2'
 import express from 'express'
 import bodyParser from 'body-parser'
 import {
+  CHAT_ID,
   GITHUB_GIST_ID,
+  MESSAGE_THREAD_ID,
   PORT,
   TELEGRAM_API,
   TWITTER_BEARER_TOKEN,
@@ -73,6 +75,16 @@ const main = async (): Promise<void> => {
         .then((resp) => console.log(resp))
         .catch((err) => console.error(err))
     }
+
+    // send msg to specific group
+    await axios
+      .post(`${TELEGRAM_API}/sendMessage`, {
+        chat_id: CHAT_ID,
+        message_thread_id: MESSAGE_THREAD_ID,
+        text: `${tweetContent} ${tweetLink}`,
+      })
+      .then((resp) => console.log(resp))
+      .catch((err) => console.error(err))
   })
 
   /* SERVER SETUP */
