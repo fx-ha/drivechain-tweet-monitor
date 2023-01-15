@@ -56,29 +56,31 @@ const main = async (): Promise<void> => {
       return
     }
 
-    const tweetAuthorId = tweet.data.author_id
-    const tweetAuthor = tweetAuthorId
-      ? await twitterClient.user(tweetAuthorId)
-      : undefined
-    const tweetAuthorName = tweetAuthor?.data.username
-
-    const tweetLink = `https://twitter.com/${
-      tweetAuthorName || 'anyuser'
-    }/status/${tweet.data.id}`
-    const tweetContent = tweet.data.text
-
+    // Get Telegram users to message
     const users = await getUsers()
 
     if (!users) {
       return
     }
 
+    const tweetAuthorId = tweet.data.author_id
+    const tweetAuthor = tweetAuthorId
+      ? await twitterClient.user(tweetAuthorId)
+      : undefined
+    const tweetAuthorName = tweetAuthor?.data.username
+
+    const tweetLink = `https://fxtwitter.com/${
+      tweetAuthorName || 'anyuser'
+    }/status/${tweet.data.id}`
+    // const tweetContent = tweet.data.text
+
     for (const user of users) {
       await axios
         .post(`${TELEGRAM_API}/sendMessage`, {
           chat_id: user.chatId,
           // message_thread_id: MESSAGE_THREAD_ID,
-          text: `${tweetContent} ${tweetLink}`,
+          // text: `${tweetContent} ${tweetLink}`,
+          text: tweetLink,
         })
         .then((resp) => console.log(resp))
         .catch((err) => console.error(err))
@@ -89,7 +91,8 @@ const main = async (): Promise<void> => {
       .post(`${TELEGRAM_API}/sendMessage`, {
         chat_id: CHAT_ID,
         message_thread_id: MESSAGE_THREAD_ID,
-        text: `${tweetContent} ${tweetLink}`,
+        // text: `${tweetContent} ${tweetLink}`,
+        text: tweetLink,
       })
       .then((resp) => console.log(resp))
       .catch((err) => console.error(err))
