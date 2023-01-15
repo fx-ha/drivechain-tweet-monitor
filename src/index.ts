@@ -56,7 +56,15 @@ const main = async (): Promise<void> => {
       return
     }
 
-    const tweetLink = `https://twitter.com/anyuser/status/${tweet.data.id}`
+    const tweetAuthorId = tweet.data.author_id
+    const tweetAuthor = tweetAuthorId
+      ? await twitterClient.user(tweetAuthorId)
+      : undefined
+    const tweetAuthorName = tweetAuthor?.data.name
+
+    const tweetLink = `https://twitter.com/${
+      tweetAuthorName || 'anyuser'
+    }/status/${tweet.data.id}`
     const tweetContent = tweet.data.text
 
     const users = await getUsers()
