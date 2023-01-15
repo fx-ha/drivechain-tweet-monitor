@@ -60,7 +60,7 @@ const main = async (): Promise<void> => {
     const tweetAuthor = tweetAuthorId
       ? await twitterClient.user(tweetAuthorId)
       : undefined
-    const tweetAuthorName = tweetAuthor?.data.name
+    const tweetAuthorName = tweetAuthor?.data.username
 
     const tweetLink = `https://twitter.com/${
       tweetAuthorName || 'anyuser'
