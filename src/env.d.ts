@@ -1,11 +1,12 @@
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
-      PORT: string;
       TELEGRAM_TOKEN: string;
       TWITTER_BEARER_TOKEN: string;
-      CHAT_ID: string;
-      MESSAGE_THREAD_ID: string;
+      SERVER_URL: string;
+      PORT: string;
+      GITHUB_PERSONAL_ACCESS_TOKEN: string;
+      GITHUB_GIST_ID: string;
     }
   }
 }
