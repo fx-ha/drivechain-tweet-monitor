@@ -1,18 +1,18 @@
 import 'dotenv-safe/config'
 import axios from 'axios'
 import { ETwitterStreamEvent, TwitterApi } from 'twitter-api-v2'
-import express from 'express'
-import bodyParser from 'body-parser'
+// import express from 'express'
+// import bodyParser from 'body-parser'
 import {
   CHAT_ID,
-  GITHUB_GIST_ID,
+  // GITHUB_GIST_ID,
   MESSAGE_THREAD_ID,
-  PORT,
+  // PORT,
   TELEGRAM_API,
   TWITTER_BEARER_TOKEN,
-  URI,
+  // URI,
 } from './consts'
-import { getUsers, init, octokit } from './lib'
+// import { getUsers, init, octokit } from './lib'
 
 const twitterClient = new TwitterApi(TWITTER_BEARER_TOKEN).readOnly.v2
 
@@ -57,34 +57,34 @@ const main = async (): Promise<void> => {
     }
 
     // Get Telegram users to message
-    const users = await getUsers()
+    // const users = await getUsers()
 
-    if (!users) {
-      return
-    }
+    // if (!users) {
+    //   return
+    // }
 
-    const tweetAuthorId = tweet.data.author_id
-    const tweetAuthor = tweetAuthorId
-      ? await twitterClient.user(tweetAuthorId)
-      : undefined
-    const tweetAuthorName = tweetAuthor?.data.username
+    // const tweetAuthorId = tweet.data.author_id
+    // const tweetAuthor = tweetAuthorId
+    //   ? await twitterClient.user(tweetAuthorId)
+    //   : undefined
+    // const tweetAuthorName = tweetAuthor?.data.username
 
-    const tweetLink = `https://fxtwitter.com/${
-      tweetAuthorName || 'anyuser'
-    }/status/${tweet.data.id}`
+    // const tweetLink = `https://fxtwitter.com/${
+    //   tweetAuthorName || 'anyuser'
+    // }/status/${tweet.data.id}`
     // const tweetContent = tweet.data.text
 
-    for (const user of users) {
-      await axios
-        .post(`${TELEGRAM_API}/sendMessage`, {
-          chat_id: user.chatId,
-          // message_thread_id: MESSAGE_THREAD_ID,
-          // text: `${tweetContent} ${tweetLink}`,
-          text: tweetLink,
-        })
-        .then((resp) => console.log(resp))
-        .catch((err) => console.error(err))
-    }
+    // for (const user of users) {
+    //   await axios
+    //     .post(`${TELEGRAM_API}/sendMessage`, {
+    //       chat_id: user.chatId,
+    //       // message_thread_id: MESSAGE_THREAD_ID,
+    //       // text: `${tweetContent} ${tweetLink}`,
+    //       text: tweetLink,
+    //     })
+    //     .then((resp) => console.log(resp))
+    //     .catch((err) => console.error(err))
+    // }
 
     // send msg to specific group
     await axios
@@ -92,64 +92,64 @@ const main = async (): Promise<void> => {
         chat_id: CHAT_ID,
         message_thread_id: MESSAGE_THREAD_ID,
         // text: `${tweetContent} ${tweetLink}`,
-        text: tweetLink,
+        text: `https://fxtwitter.com/anyuser/status/${tweet.data.id}`,
       })
       .then((resp) => console.log(resp))
       .catch((err) => console.error(err))
   })
 
   /* SERVER SETUP */
-  const app = express()
-  app.use(bodyParser.json())
+  // const app = express()
+  // app.use(bodyParser.json())
 
-  // Add new users who send /start
-  app.post(URI, async (req, res) => {
-    const users = await getUsers()
+  // // Add new users who send /start
+  // app.post(URI, async (req, res) => {
+  //   const users = await getUsers()
 
-    if (!users) {
-      console.error('problem getting users')
-      return
-    }
+  //   if (!users) {
+  //     console.error('problem getting users')
+  //     return
+  //   }
 
-    if (!req.body.message?.text?.includes('/start')) {
-      console.log('spam, ignore')
+  //   if (!req.body.message?.text?.includes('/start')) {
+  //     console.log('spam, ignore')
 
-      return
-    }
+  //     return
+  //   }
 
-    const chatId = req.body.message?.chat.id
+  //   const chatId = req.body.message?.chat.id
 
-    const existingChatIds = users.map((u) => u.chatId)
+  //   const existingChatIds = users.map((u) => u.chatId)
 
-    if (!existingChatIds.includes(chatId)) {
-      const newUsersArray = []
+  //   if (!existingChatIds.includes(chatId)) {
+  //     const newUsersArray = []
 
-      for (const existingChatId of existingChatIds) {
-        newUsersArray.push({ chatId: existingChatId })
-      }
+  //     for (const existingChatId of existingChatIds) {
+  //       newUsersArray.push({ chatId: existingChatId })
+  //     }
 
-      newUsersArray.push({ chatId })
+  //     newUsersArray.push({ chatId })
 
-      await octokit.request(`PATCH /gists/${GITHUB_GIST_ID}`, {
-        gist_id: GITHUB_GIST_ID,
-        description: 'Add users',
-        files: {
-          'users.json': {
-            content: JSON.stringify({ data: newUsersArray }),
-          },
-        },
-      })
-      return
-    }
+  //     await octokit.request(`PATCH /gists/${GITHUB_GIST_ID}`, {
+  //       gist_id: GITHUB_GIST_ID,
+  //       description: 'Add users',
+  //       files: {
+  //         'users.json': {
+  //           content: JSON.stringify({ data: newUsersArray }),
+  //         },
+  //       },
+  //     })
+  //     return
+  //   }
 
-    return res.send()
-  })
+  //   return res.send()
+  // })
 
-  app.listen(parseInt(PORT) || 3000, async () => {
-    console.log(`app running on port ${PORT || 3000}`)
+  // app.listen(parseInt(PORT) || 3000, async () => {
+  //   console.log(`app running on port ${PORT || 3000}`)
 
-    await init()
-  })
+  //   await init()
+  // })
 }
 
 main().catch((error) => {
