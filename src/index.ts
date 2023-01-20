@@ -32,6 +32,8 @@ const main = async (): Promise<void> => {
       { value: 'DRIVECHAINS' },
       { value: 'bip300' },
       { value: 'BIP300' },
+      { value: 'bip-300' },
+      { value: 'BIP-300' },
     ],
   })
 
