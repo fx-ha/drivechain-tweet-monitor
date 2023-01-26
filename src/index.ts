@@ -34,6 +34,10 @@ const main = async (): Promise<void> => {
       { value: 'BIP300' },
       { value: 'bip-300' },
       { value: 'BIP-300' },
+      { value: 'bip301' },
+      { value: 'BIP301' },
+      { value: 'bip-301' },
+      { value: 'BIP-301' },
     ],
   })
 
@@ -53,6 +57,11 @@ const main = async (): Promise<void> => {
       return
     }
 
+    // filter spam bots
+    if (tweet.data.text.includes('???')) {
+      return
+    }
+
     // send msg to specific group
     await axios
       .post(`${TELEGRAM_API}/sendMessage`, {
@@ -60,7 +69,7 @@ const main = async (): Promise<void> => {
         message_thread_id: MESSAGE_THREAD_ID,
         text: `https://fxtwitter.com/anyuser/status/${tweet.data.id}`,
       })
-      .then((resp) => console.log(resp))
+      .then(() => {})
       .catch((err) => console.error(err))
   })
 }
